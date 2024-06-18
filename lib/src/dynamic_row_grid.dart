@@ -1,6 +1,8 @@
 part of '../dynamic_row_grid.dart';
 
+/// A widget that creates a dynamic, responsive grid layout.
 class DynamicRowGrid extends StatelessWidget {
+  /// Creates a [DynamicRowGrid] widget.
   const DynamicRowGrid({
     super.key,
     required this.itemCount,
@@ -20,20 +22,49 @@ class DynamicRowGrid extends StatelessWidget {
     this.emptyStateWidget,
   });
 
+  /// The total number of items in the grid.
   final int itemCount;
+
+  /// A builder function to create each item in the grid.
   final Widget Function(BuildContext context, int index) itemBuilder;
+
+  /// The number of items in each row.
   final int crossAxisCount;
+
+  /// The physics for the scrollable grid.
   final ScrollPhysics? physics;
+
+  /// Whether the grid should shrink-wrap its content.
   final bool shrinkWrap;
+
+  /// The padding around the grid.
   final EdgeInsetsGeometry? padding;
+
+  /// The controller for the scrollable grid.
   final ScrollController? controller;
+
+  /// The alignment of items within each row.
   final AlignmentGeometry alignment;
+
+  /// The horizontal spacing between items.
   final double horizontalSpacing;
+
+  /// The vertical spacing between rows.
   final double verticalSpacing;
+
+  /// The decoration for each row.
   final BoxDecoration? rowDecoration;
+
+  /// The decoration for the entire grid.
   final BoxDecoration? gridDecoration;
+
+  /// An optional header widget for the grid.
   final Widget? header;
+
+  /// An optional footer widget for the grid.
   final Widget? footer;
+
+  /// A widget to display when the grid is empty.
   final Widget? emptyStateWidget;
 
   @override
