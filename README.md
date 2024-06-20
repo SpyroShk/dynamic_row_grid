@@ -2,7 +2,7 @@
 
 DynamicRowGrid is a highly customizable and flexible Flutter package designed to create dynamic, responsive grids of items with ease. It offers a wide range of configuration options to meet various UI needs, making it an ideal choice for developers looking to create visually appealing and functionally robust grid layouts in their applications.
 
-<img src="screenshot/grid.gif" width="200">
+<img src="https://github.com/SpyroShk/dynamic_row_grid/raw/main/screenshot/grid.gif" width="200">
 
 ## Features
 
