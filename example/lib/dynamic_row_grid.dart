@@ -19,7 +19,6 @@ class DynamicRowGrid extends StatelessWidget {
     this.alignment = Alignment.center,
     this.horizontalSpacing = 8.0,
     this.verticalSpacing = 6.0,
-    this.rowDecoration,
     this.gridDecoration,
     this.header,
     this.footer,
@@ -33,7 +32,7 @@ class DynamicRowGrid extends StatelessWidget {
   /// A builder function to create each item in the grid.
   final Widget Function(BuildContext context, int index) itemBuilder;
 
-  /// The number of items in each row.
+  /// The number of items in each row while using a horizontal layout.
   final int crossAxisCount;
 
   /// The physics for the scrollable grid.
@@ -57,9 +56,6 @@ class DynamicRowGrid extends StatelessWidget {
   /// The vertical spacing between rows.
   final double verticalSpacing;
 
-  /// The decoration for each row.
-  final BoxDecoration? rowDecoration;
-
   /// The decoration for the entire grid.
   final BoxDecoration? gridDecoration;
 
@@ -72,6 +68,7 @@ class DynamicRowGrid extends StatelessWidget {
   /// A widget to display when the grid is empty.
   final Widget? emptyStateWidget;
 
+  /// A widget to enable horizontal scrolling.
   final bool horizontalScroll;
 
   @override
@@ -82,78 +79,68 @@ class DynamicRowGrid extends StatelessWidget {
 
     return Container(
       decoration: gridDecoration,
-      child: horizontalScroll
-          ? IntrinsicHeight(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: padding,
-                physics: physics,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                    (itemCount / crossAxisCount).ceil(),
-                    (index) {
-                      if (header != null && index == 0) {
-                        return header!;
-                      } else if (footer != null &&
-                          index ==
-                              (itemCount / crossAxisCount).ceil() +
-                                  (header != null ? 1 : 0)) {
-                        return footer!;
-                      } else {
-                        final realIndex = index - (header != null ? 1 : 0);
-                        return Container(
-                            alignment: alignment,
-                            child: item(realIndex, context));
-                      }
-                    },
+      child: SingleChildScrollView(
+        controller: controller,
+        scrollDirection: Axis.vertical,
+        padding: padding,
+        physics: physics,
+        child: Column(
+          children: [
+            if (header != null) header!,
+            horizontalScroll
+                ? SingleChildScrollView(
+                    physics: physics,
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: alignment == Alignment.center ||
+                              alignment == Alignment.bottomCenter ||
+                              alignment == Alignment.topCenter
+                          ? CrossAxisAlignment.center
+                          : alignment == Alignment.topLeft ||
+                                  alignment == Alignment.centerLeft ||
+                                  alignment == Alignment.bottomLeft
+                              ? CrossAxisAlignment.start
+                              : CrossAxisAlignment.end,
+                      spacing: verticalSpacing,
+                      children: List.generate(
+                        (itemCount / crossAxisCount).ceil(),
+                        (index) {
+                          return item(index, context);
+                        },
+                      ),
+                    ),
+                  )
+                : Wrap(
+                    spacing: horizontalSpacing,
+                    runSpacing: verticalSpacing,
+                    alignment: alignment == Alignment.center ||
+                            alignment == Alignment.bottomCenter ||
+                            alignment == Alignment.topCenter
+                        ? WrapAlignment.center
+                        : alignment == Alignment.topLeft ||
+                                alignment == Alignment.centerLeft ||
+                                alignment == Alignment.bottomLeft
+                            ? WrapAlignment.start
+                            : WrapAlignment.end,
+                    children: List.generate(itemCount, (buttonIndex) {
+                      return itemBuilder(context, buttonIndex);
+                    }).toList(),
                   ),
-                ),
-              ),
-            )
-          : ListView.builder(
-              padding: padding,
-              controller: controller,
-              physics: physics,
-              shrinkWrap: shrinkWrap,
-              itemCount: (itemCount / crossAxisCount).ceil() +
-                  (header != null ? 1 : 0) +
-                  (footer != null ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (header != null && index == 0) {
-                  return header!;
-                } else if (footer != null &&
-                    index ==
-                        (itemCount / crossAxisCount).ceil() +
-                            (header != null ? 1 : 0)) {
-                  return footer!;
-                } else {
-                  final realIndex = index - (header != null ? 1 : 0);
-                  return Container(
-                    decoration: rowDecoration,
-                    alignment: alignment,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: horizontalSpacing / 2),
-                    margin: EdgeInsets.only(bottom: verticalSpacing),
-                    child: FittedBox(
-                        fit: BoxFit.scaleDown, child: item(realIndex, context)),
-                  );
-                }
-              },
-            ),
+            if (footer != null) footer!,
+          ],
+        ),
+      ),
     );
   }
 
   Widget item(int realIndex, context) {
     return Row(
+      spacing: horizontalSpacing,
       children: List.generate(
         min(crossAxisCount, itemCount - realIndex * crossAxisCount),
         (innerIndex) {
           final buttonIndex = realIndex * crossAxisCount + innerIndex;
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalSpacing / 2),
-            child: itemBuilder(context, buttonIndex),
-          );
+          return itemBuilder(context, buttonIndex);
         },
       ),
     );

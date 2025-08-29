@@ -12,3 +12,7 @@
 ## 0.0.2
 
 - ReadMe Updated
+
+## 0.0.3
+
+- Removed fixed number of items in a row while vertical scrolling resulting in more dynamic listing.

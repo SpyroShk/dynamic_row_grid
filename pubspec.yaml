@@ -1,6 +1,6 @@
 name: dynamic_row_grid
 description: "DynamicRowGrid is a Flutter package for customizable, responsive grid layouts, ideal for flexible designs."
-version: 0.0.1
+version: 0.0.3
 homepage: https://github.com/SpyroShk/dynamic_row_grid.git
 
 environment:
