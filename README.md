@@ -13,7 +13,7 @@ DynamicRowGrid is a highly customizable and flexible Flutter package designed to
 - Padding and Margins: Customize padding around the grid and margins between rows to fit your design needs.
 - Scrollable Grid: Utilize scrollable grids with custom scroll physics and controllers.
 - Shrink-Wrap Support: Enable or disable shrink-wrap behavior to optimize performance based on your layout requirements.
-- Custom Row and Grid Decorations: Apply custom decorations to rows and the entire grid using rowDecoration and gridDecoration.
+- Grid Decorations: Apply custom decorations the entire grid using gridDecoration.
 - Header and Footer: Add optional header and footer widgets to the grid for additional context or functionality.
 - Empty State Handling: Display a custom widget when the grid is empty using the emptyStateWidget property.
 
@@ -23,7 +23,7 @@ DynamicRowGrid is a highly customizable and flexible Flutter package designed to
 
    ```yaml
    dependencies:
-     dynamic_row_grid: ^0.0.1
+     dynamic_row_grid: ^0.0.3
    ```
 
 2. Import the Package: Include the package in your Dart code with import 'package:dynamic_row_grid/dynamic_row_grid.dart';.
@@ -48,7 +48,6 @@ Customizable Properties in DynamicRowGrid
 - controller
 - shrinkWrap
 - padding
-- rowDecoration
 - gridDecoration
 - header
 - footer
@@ -76,80 +75,69 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        body: DynamicRowGrid(
-          itemCount: animals.length,
-          crossAxisCount: 4,
-          physics: const BouncingScrollPhysics(),
-          header: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Animals',
-              style: TextStyle(
+      home: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: DynamicRowGrid(
+            // horizontalScroll: true,
+            alignment: Alignment.centerLeft,
+            itemCount: animals.length,
+            crossAxisCount: 10,
+            physics: const BouncingScrollPhysics(),
+            // horizontalSpacing: 0,
+            // verticalSpacing: 0,
+            header: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16.0),
+              child: const Text(
+                'Animals',
+                textAlign: TextAlign.left,
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          footer: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Footer',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          emptyStateWidget: const Center(
-            child: Text(
-              'No animals available',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          itemBuilder: (context, index) {
-            return ElevatedButton(
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
-                  ),
-                ),
-                backgroundColor: MaterialStateProperty.all(
-                  Color.fromARGB(
-                    255,
-                    Random().nextInt(256),
-                    Random().nextInt(256),
-                    Random().nextInt(256),
-                  ),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    side: const BorderSide(width: 1, color: Colors.black),
-                  ),
-                ),
-                shadowColor: MaterialStateProperty.all(
-                  Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: () {},
+            ),
+            footer: const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
-                animals[index],
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
+                'Footer',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
               ),
-            );
-          },
+            ),
+            emptyStateWidget: const Center(
+              child: Text(
+                'No animals available',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            itemBuilder: (context, index) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors
+                      .primaries[Random().nextInt(Colors.primaries.length)],
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  animals[index],
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
